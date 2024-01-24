@@ -1,0 +1,13 @@
+
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "tokenlab",
+    "password": "123456",
+    "database": "tokenlab",
+    "entities": ["src/**/*.model{.ts,.js}"],
+    "synchronize": true,
+    "logging": true
+  }
+  
