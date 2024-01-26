@@ -6,6 +6,7 @@ import {
   BaseEntity,
 } from 'typeorm';
 import { EventModel } from '../event/event.model';
+import { Invitation } from '../invitation/invitation.model';
 
 @Entity('users')
 export class UserModel extends BaseEntity {
@@ -20,4 +21,7 @@ export class UserModel extends BaseEntity {
 
   @OneToMany(() => EventModel, (event) => event.user)
   events: EventModel[];
+
+  @OneToMany(() => Invitation, (invitation) => invitation.invitedUser)
+  invitations: Invitation[];
 }

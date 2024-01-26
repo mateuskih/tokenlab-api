@@ -6,6 +6,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel } from './user.model';
 import { Repository } from 'typeorm';
+import { EventModel } from '../event/event.model';
+import { Invitation } from '../invitation/invitation.model';
 
 @Injectable()
 export class UserService {
@@ -17,6 +19,31 @@ export class UserService {
   async createUser(username: string, password: string): Promise<UserModel> {
     const user = this.userRepository.create({ username, password });
     return await this.userRepository.save(user);
+  }
+
+  async getInvitedEvents(userId: number): Promise<EventModel[]> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['invitations', 'invitations.event'],
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const invitedEvents = user.invitations.map(
+      (invitation: Invitation) => invitation.event,
+    );
+
+    return invitedEvents;
+  }
+
+  async findAllUsers(): Promise<UserModel[]> {
+    const users = await this.userRepository.find();
+    if (!users || users.length === 0) {
+      throw new NotFoundException('No users found');
+    }
+    return users;
   }
 
   async findUserById(id: number): Promise<UserModel> {
