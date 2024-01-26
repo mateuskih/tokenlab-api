@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { EventModel } from './event.model';
+import { ConviteStatusEnum } from 'src/invitation/convite-status.enum';
 
 @Controller('events')
 export class EventController {
@@ -20,12 +21,27 @@ export class EventController {
     @Body('startTime') startTime: Date,
     @Body('endTime') endTime: Date,
     @Body('userId') userId: number,
+    @Body('invitedUserIds') invitedUserIds: number[] = [],
   ): Promise<EventModel> {
-    return await this.eventService.addEvent(
+    return this.eventService.addEvent(
       description,
       startTime,
       endTime,
       userId,
+      invitedUserIds,
+    );
+  }
+
+  @Post('respond/:userId/:eventId')
+  async respondToEventInvitation(
+    @Param('eventId') eventId: number,
+    @Param('userId') userId: number,
+    @Body('response') response: 'accept' | 'decline',
+  ): Promise<{ event: string; status: ConviteStatusEnum }> {
+    return this.eventService.respondToEventInvitation(
+      eventId,
+      userId,
+      response,
     );
   }
 

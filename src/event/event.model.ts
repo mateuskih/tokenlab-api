@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { UserModel } from '../user/user.model';
+import { Invitation } from '../invitation/invitation.model';
 
 @Entity('events')
 export class EventModel {
@@ -17,4 +24,9 @@ export class EventModel {
 
   @ManyToOne(() => UserModel, (user) => user.events)
   user: UserModel;
+
+  @OneToMany(() => Invitation, (invitation) => invitation.event, {
+    cascade: true,
+  })
+  invitations: Invitation[];
 }
