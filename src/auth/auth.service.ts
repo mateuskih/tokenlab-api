@@ -19,8 +19,8 @@ export class AuthService {
       senha,
     );
 
-    const payload = { sub: user.id, username: user.username };
-    const accessToken = this.jwtService.sign(payload);
+    const payload = { id: user.id, username: user.username };
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
 
     return { access_token: accessToken };
   }
