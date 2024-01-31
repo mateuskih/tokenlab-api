@@ -16,7 +16,10 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.createToken(signInDto.username, signInDto.password);
+  async signIn(
+    @Body() body: { username: string; password: string },
+  ): Promise<any> {
+    const { username, password } = body;
+    return this.authService.createToken(username, password);
   }
 }

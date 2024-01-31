@@ -37,10 +37,13 @@ export class UserController {
   @Get('invited/:userId')
   async getInvitedEvents(
     @Param('userId') userId: number,
-  ): Promise<EventModel[]> {
+  ): Promise<{ event: EventModel; status: string }[]> {
     try {
       const invitedEvents = await this.userService.getInvitedEvents(userId);
-      return invitedEvents;
+      return invitedEvents.map((invitation) => ({
+        event: invitation.event,
+        status: invitation.status,
+      }));
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException(error.message);

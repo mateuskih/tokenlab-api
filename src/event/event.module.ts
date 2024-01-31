@@ -5,7 +5,7 @@ import { UserService } from '../user/user.service';
 import { EventController } from './event.controller';
 import { EventModel } from './event.model';
 import { EventService } from './event.service';
-import { UserModel } from '../user/user.model'; // Import UserModel
+import { UserModel } from '../user/user.model';
 
 @Module({
   imports: [TypeOrmModule.forFeature([EventModel, UserModel]), UserModule],

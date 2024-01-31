@@ -6,8 +6,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel } from './user.model';
 import { Repository } from 'typeorm';
-import { EventModel } from '../event/event.model';
 import { Invitation } from '../invitation/invitation.model';
+import { InvitationWithStatus } from 'src/invitation/convite-status.enum';
 
 @Injectable()
 export class UserService {
@@ -21,7 +21,7 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async getInvitedEvents(userId: number): Promise<EventModel[]> {
+  async getInvitedEvents(userId: number): Promise<InvitationWithStatus[]> {
     const user = await this.userRepository.findOne({
       where: { id: userId },
       relations: ['invitations', 'invitations.event'],
@@ -31,8 +31,11 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
-    const invitedEvents = user.invitations.map(
-      (invitation: Invitation) => invitation.event,
+    const invitedEvents: InvitationWithStatus[] = user.invitations.map(
+      (invitation: Invitation) => ({
+        event: invitation.event,
+        status: invitation.status,
+      }),
     );
 
     return invitedEvents;
